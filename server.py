@@ -14,13 +14,22 @@ class CounterServer(object):
 
 	def default(self, attr=''):
 		if os.path.isfile(NEW_MAIN_IMAGE_PATH):
-			os.remove(MAIN_IMAGE_PATH)
+			try:
+				os.remove(MAIN_IMAGE_PATH)
+			except:
+				pass
 			os.rename(NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH)
 			self._im = None
 		if not self._im:
-			im = load_main_image(MAIN_IMAGE_PATH)
-		cherrypy.response.headers['Content-type'] = 'image/png'
-		return file_generator(image_stream(self._im))
+			try:
+				self._im = load_main_image(MAIN_IMAGE_PATH)
+			except:
+				self._im = None
+		if self._im:
+			cherrypy.response.headers['Content-type'] = 'image/png'
+			return file_generator(image_stream(self._im))
+
+		return 'Oops!'
 
 	default.exposed = True
 
