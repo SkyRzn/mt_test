@@ -8,6 +8,15 @@ from db import DB
 from log import log
 
 
+def table(data):
+	trs = []
+	for row in data:
+		tds = []
+		for cell in row:
+			tds.append('<td>%s</td>' % (str(cell),))
+		trs.append('\t<tr> %s </tr>' % (' '.join(tds)))
+	return '<table width="100%%" border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;">\n%s\n</table>\n' % ('\n'.join(trs))
+
 class CounterServer(object):
 	def __init__(self):
 		object.__init__(self)
@@ -19,7 +28,7 @@ class CounterServer(object):
 		with DB() as db:
 			res = db.execute('SELECT * FROM orders')
 			res = res.fetchall()
-			res = '</br>'.join(res)
+			res = table(res)
 		client = cherrypy.request.remote
 		cherrypy.response.headers['Content-type'] = 'text/html'
 		return res
