@@ -6,6 +6,8 @@ from image import load_image, create_main_image
 from log import print_exc, log
 from db import DB
 
+test_ids = ['3aaSJfbshtXfDnrxh8TCx3AhJcF1enZw8mmRcWEoT4gy']
+
 
 def remove_orders(orders):
 	cnt = len(orders)
@@ -46,6 +48,9 @@ def work():
 				try:
 					id_ = tr['id'] #FIXME checks
 
+					if id_ in test_ids:
+						continue
+
 					if db.has_order(id_):
 						continue
 
@@ -75,7 +80,7 @@ def work():
 					print_exc(exc)
 					log('Transaction: %s' % (str(tr),))
 
-			if orders_added > 0:
+			if True:
 				res = db.execute("SELECT * FROM orders ORDER BY time")
 				orders = res.fetchall()
 
