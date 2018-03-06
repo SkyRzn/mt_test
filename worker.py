@@ -82,7 +82,7 @@ def work():
 				active, expired = orders_split(orders)
 				remove_orders(expired)
 
-				active.reverse()
+				#active.reverse()
 				create_main_image(active) #FIXME for changes only
 	except Exception as exc:
 		print_exc(exc)
