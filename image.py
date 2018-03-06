@@ -61,6 +61,6 @@ def image_stream(im, fmt = 'png'):
 	res.seek(0)
 	return res
 
-def load_image(fn):
+def load_main_image(fn):
 	return Image.open(fn, 'r')
 

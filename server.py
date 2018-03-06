@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 
-from image import load_image, image_stream, NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH
+from image import load_main_image, image_stream, NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH
 import cherrypy, os
 from cherrypy.lib import file_generator
 
@@ -18,7 +18,7 @@ class CounterServer(object):
 			os.rename(NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH)
 			self._im = None
 		if not self._im:
-			im = load_image(MAIN_IMAGE_PATH)
+			im = load_main_image(MAIN_IMAGE_PATH)
 		cherrypy.response.headers['Content-type'] = 'image/png'
 		return file_generator(image_stream(self._im))
 
