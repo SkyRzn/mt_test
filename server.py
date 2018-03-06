@@ -4,6 +4,8 @@
 from image import load_main_image, image_stream, NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH
 import cherrypy, os
 from cherrypy.lib import file_generator
+from db import DB
+from log import log
 
 
 class CounterServer(object):
@@ -12,8 +14,19 @@ class CounterServer(object):
 		self._lastTime = None
 		self._im = None
 
+	@cherrypy.expose
+	def db(self):
+		with DB() as db:
+			res = db.execute('SELECT * FROM orders')
+			res = res.fetchall()
+			res = '</br>'.join(res)
+		client = cherrypy.request.remote
+		cherrypy.response.headers['Content-type'] = 'text/html'
+		return res
+
 	def default(self, attr=''):
 		if os.path.isfile(NEW_MAIN_IMAGE_PATH):
+			log('New main image')
 			try:
 				os.remove(MAIN_IMAGE_PATH)
 			except:
@@ -21,6 +34,7 @@ class CounterServer(object):
 			os.rename(NEW_MAIN_IMAGE_PATH, MAIN_IMAGE_PATH)
 			self._im = None
 		if not self._im:
+			log('Load main image')
 			try:
 				self._im = load_main_image(MAIN_IMAGE_PATH)
 			except:
